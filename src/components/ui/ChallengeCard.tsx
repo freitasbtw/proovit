@@ -14,14 +14,14 @@ const colors = {
   success: '#10b981', // Verde
   warning: '#f59e0b', // Amarelo
   danger: '#ef4444',  // Vermelho
-  idle: '#6b7280'     // Cinza
+  idle: '#2563eb'     // Azul highlight
 };
 
 const bgColors = {
   success: 'rgba(16, 185, 129, 0.1)',
   warning: 'rgba(245, 158, 11, 0.1)',
   danger: 'rgba(239, 68, 68, 0.1)',
-  idle: 'rgba(55, 65, 81, 0.5)'
+  idle: 'rgba(37, 99, 235, 0.1)' // Azul
 };
 
 export function ChallengeCard({ title, progress, status, iconName }: Props) {

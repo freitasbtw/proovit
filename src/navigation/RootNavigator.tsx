@@ -3,12 +3,17 @@ import { View, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 
 // Telas principais
 import { HomeScreen } from '../screens/HomeScreen';
 import { CreateGroupScreen } from '../screens/CreateGroupScreen';
 import { LeaderboardScreen } from '../screens/LeaderboardScreen';
+import { GroupsScreen } from '../screens/GroupsScreen';
+import { ChecklistScreen } from '../screens/ChecklistScreen';
+import { DirectScreen } from '../screens/DirectScreen';
+import { ProfileScreen } from '../screens/ProfileScreen';
+
 // Telas aninhadas (Stack)
 import { CameraScreen } from '../screens/checkin/CameraScreen';
 
@@ -16,12 +21,15 @@ import { CameraScreen } from '../screens/checkin/CameraScreen';
 export type RootStackParamList = {
   MainTabs: undefined;
   Camera: { challengeId: string };
+  Direct: undefined;
 };
 
 export type BottomTabParamList = {
   Home: undefined;
-  Criar: undefined;
-  Ranking: undefined;
+  Explore: undefined;
+  Checklist: undefined; // Novo: Checklist
+  Groups: undefined;    // Novo: Grupos
+  Profile: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -31,48 +39,41 @@ const Tab = createBottomTabNavigator<BottomTabParamList>();
 function TabNavigator() {
   return (
     <Tab.Navigator
+      sceneContainerStyle={{ backgroundColor: '#000' }} // Fundo preto explícito para as abas
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarShowLabel: false, // Minimalista: sem labels
-        tabBarActiveTintColor: '#a78bfa',
-        tabBarInactiveTintColor: '#64748b',
+        tabBarActiveTintColor: '#2563eb', // Blue active (Azul escuro/Royal Blue)
+        tabBarInactiveTintColor: '#666666', // Grey inactive
         tabBarStyle: {
-          backgroundColor: '#0f172a',
-          borderTopWidth: 0,
+          backgroundColor: '#000000', // Pure black
+          borderTopWidth: 1,
+          borderTopColor: '#1c1c1e',
           elevation: 0,
           height: Platform.OS === 'ios' ? 88 : 60,
           paddingTop: 10,
         },
         tabBarIcon: ({ focused, color, size }) => {
-          if (route.name === 'Criar') {
-            return (
-              <View style={{
-                top: -20,
-                width: 56,
-                height: 56,
-                borderRadius: 28,
-                backgroundColor: '#a78bfa',
-                justifyContent: 'center',
-                alignItems: 'center',
-                shadowColor: '#a78bfa',
-                shadowOffset: { width: 0, height: 8 },
-                shadowOpacity: 0.5,
-                shadowRadius: 8,
-                elevation: 4,
-              }}>
-                <Ionicons name="add" size={32} color="#fff" />
-              </View>
-            );
-          }
-
           let iconName: keyof typeof Ionicons.glyphMap;
 
-          if (route.name === 'Home') {
-            iconName = focused ? 'home' : 'home-outline';
-          } else if (route.name === 'Ranking') {
-            iconName = focused ? 'trophy' : 'trophy-outline';
-          } else {
-            iconName = 'alert-circle';
+          switch (route.name) {
+            case 'Home':
+              iconName = focused ? 'home' : 'home-outline';
+              break;
+            case 'Explore':
+              iconName = focused ? 'search' : 'search-outline';
+              break;
+            case 'Checklist':
+              iconName = focused ? 'checkbox' : 'checkbox-outline';
+              break;
+            case 'Groups':
+              iconName = focused ? 'people' : 'people-outline';
+              break;
+            case 'Profile':
+              iconName = focused ? 'person' : 'person-outline';
+              break;
+            default:
+              iconName = 'alert-circle';
           }
 
           return <Ionicons name={iconName} size={28} color={color} />;
@@ -80,17 +81,36 @@ function TabNavigator() {
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Criar" component={CreateGroupScreen} />
-      <Tab.Screen name="Ranking" component={LeaderboardScreen} />
+      <Tab.Screen name="Explore" component={LeaderboardScreen} />
+      <Tab.Screen name="Checklist" component={ChecklistScreen} />
+      <Tab.Screen name="Groups" component={GroupsScreen} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
 }
 
 // Navegador principal conectando as abas e o fluxo full-screen (Câmera)
 export function RootNavigator() {
+  const CustomDarkTheme = {
+    ...DarkTheme,
+    colors: {
+      ...DarkTheme.colors,
+      primary: '#2563eb',
+      background: '#000000',
+      card: '#000000',
+      text: '#ffffff',
+      border: '#1c1c1e',
+      notification: '#2563eb',
+    },
+  };
+
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <NavigationContainer theme={CustomDarkTheme}>
+      <Stack.Navigator screenOptions={{ 
+        headerShown: false,
+        contentStyle: { backgroundColor: '#000' }, // Garante fundo preto na transição
+        animation: 'fade', // Menos propenso a falhas de background branco
+      }}>
         {/* Abas com a base da UI */}
         <Stack.Screen name="MainTabs" component={TabNavigator} />
         {/* Telas Fullscreen que ficam por cima das abas */}
@@ -98,6 +118,11 @@ export function RootNavigator() {
           name="Camera" 
           component={CameraScreen} 
           options={{ presentation: 'fullScreenModal' }} 
+        />
+        <Stack.Screen 
+          name="Direct" 
+          component={DirectScreen} 
+          options={{ animation: 'slide_from_right' }} // Animação de entrada
         />
       </Stack.Navigator>
     </NavigationContainer>
