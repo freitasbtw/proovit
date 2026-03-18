@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Platform } from 'react-native';
+import { View, Platform, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -13,6 +13,7 @@ import { GroupsScreen } from '../screens/GroupsScreen';
 import { ChecklistScreen } from '../screens/ChecklistScreen';
 import { DirectScreen } from '../screens/DirectScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
+import { GroupDetailsScreen } from '../screens/GroupDetailsScreen';
 
 // Telas aninhadas (Stack)
 import { CameraScreen } from '../screens/checkin/CameraScreen';
@@ -22,6 +23,7 @@ export type RootStackParamList = {
   MainTabs: undefined;
   Camera: { challengeId: string };
   Direct: undefined;
+  GroupDetails: { groupId: string; name: string };
 };
 
 export type BottomTabParamList = {
@@ -54,6 +56,22 @@ function TabNavigator() {
           paddingTop: 10,
         },
         tabBarIcon: ({ focused, color, size }) => {
+          if (route.name === 'Profile') {
+            return (
+              <View style={{ 
+                borderRadius: 15, 
+                borderWidth: focused ? 2 : 0, 
+                borderColor: color, 
+                padding: 2 
+              }}>
+                <Image 
+                  source={{ uri: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150' }} 
+                  style={{ width: 24, height: 24, borderRadius: 12 }} 
+                />
+              </View>
+            );
+          }
+
           let iconName: keyof typeof Ionicons.glyphMap;
 
           switch (route.name) {
@@ -122,7 +140,12 @@ export function RootNavigator() {
         <Stack.Screen 
           name="Direct" 
           component={DirectScreen} 
-          options={{ animation: 'slide_from_right' }} // Animação de entrada
+          options={{ animation: 'slide_from_right' }} 
+        />
+        <Stack.Screen
+          name="GroupDetails"
+          component={GroupDetailsScreen}
+          options={{ animation: 'slide_from_right' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

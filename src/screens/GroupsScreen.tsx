@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { RootStackParamList } from '../navigation/RootNavigator';
 
 const MY_GROUPS = [
   { id: '1', name: 'Clube da Leitura', members: 12, image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=150&q=80' },
@@ -10,6 +12,8 @@ const MY_GROUPS = [
 ];
 
 export function GroupsScreen() {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.headerTitle}>Meus Grupos</Text>
@@ -19,7 +23,10 @@ export function GroupsScreen() {
         keyExtractor={item => item.id}
         contentContainerStyle={styles.list}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.groupItem}>
+          <TouchableOpacity 
+            style={styles.groupItem}
+            onPress={() => navigation.navigate('GroupDetails', { groupId: item.id, name: item.name })}
+          >
             <Image source={{ uri: item.image }} style={styles.groupImage} />
             <View style={styles.groupInfo}>
               <Text style={styles.groupName}>{item.name}</Text>
