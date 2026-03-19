@@ -72,79 +72,81 @@ export function HomeScreen() {
         {/* Header Section */}
         <View style={styles.header}>
           <View style={styles.headerTopRow}>
-            {/* User Profile */}
+            {/* Logo and Brand */}
+            <View style={styles.brandContainer}>
+              <Image 
+                source={require('../../assets/logo_proovit_no_bg.png')} 
+                style={styles.logo} 
+                resizeMode="contain"
+              />
+              <Text style={styles.brandName}>Proovit</Text>
+            </View>
+
+            {/* Profile in the middle */}
             <TouchableOpacity 
-              style={styles.profileSection}
+              style={styles.centerProfile}
               onPress={() => navigation.navigate('Profile')}
             >
               <Image 
                 source={{ uri: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150' }} 
-                style={styles.avatar} 
+                style={styles.largeAvatar} 
               />
-              <View>
-                <Text style={styles.greetingText}>Olá, Matheus</Text>
-                <Text style={styles.userLevel}>Level 8</Text>
-              </View>
+              <Text style={styles.userLevelCenter}>Level 8</Text>
             </TouchableOpacity>
 
-            {/* Icons */}
+            {/* Messages Icon */}
             <View style={styles.headerIcons}>
               <TouchableOpacity 
                 style={styles.iconBtn}
                 onPress={() => navigation.navigate('Direct')}
               >
-                <Ionicons name="chatbubble-ellipses-outline" size={26} color="#fff" />
+                <Ionicons name="chatbubble-ellipses-outline" size={24} color="#fff" />
                 <View style={styles.badge}><Text style={styles.badgeText}>2</Text></View>
               </TouchableOpacity>
             </View>
           </View>
-          <Text style={styles.pageTitle}>Como você está hoje?</Text>
         </View>
 
-        {/* Goal Cards */}
-        <View style={styles.cardsRow}>
-          {/* Daily Goal */}
-          <View style={[styles.goalCard, styles.dailyCard]}>
-            <View style={styles.goalCardHeader}>
-              <Ionicons name="checkmark-circle-outline" size={24} color="#fff" />
-              <Text style={styles.goalLabel}>Meta diária</Text>
-            </View>
-            <Text style={styles.goalValue}>Tomar 2 litros de água</Text>
-          </View>
-        </View>
-
-        {/* Recent Check-ins Grid */}
+        {/* Posts List */}
         <View style={styles.recentSection}>
-          <Text style={styles.recentTitle}>Os últimos check-ins</Text>
-          
-          <View style={styles.gridContainer}>
+          <View style={styles.listContainer}>
             {POSTS.map((post) => (
               <TouchableOpacity 
                 key={post.id} 
-                style={styles.gridItem}
+                style={styles.listItem}
                 onPress={() => console.log('Open post', post.id)}
               >
+                <View style={styles.listHeader}>
+                  <Image source={{ uri: post.user.avatar }} style={styles.listUserAvatar} />
+                  <View style={styles.listUserText}>
+                    <Text style={styles.listUserName}>{post.user.name}</Text>
+                    <Text style={styles.listGroupName}>{post.group.name}</Text>
+                  </View>
+                  <Text style={styles.listTime}>{post.time}</Text>
+                </View>
+
                 <Image 
                   source={{ uri: post.image! }} 
-                  style={styles.gridImage} 
+                  style={styles.listImage} 
                   resizeMode="cover"
                 />
                 
-                <View style={styles.gridContent}>
-                  <Text style={styles.gridPostTitle} numberOfLines={1}>{post.title}</Text>
+                <View style={styles.listFooter}>
+                  <Text style={styles.listPostTitle}>{post.title}</Text>
+                  <Text style={styles.listDescription} numberOfLines={2}>{post.description}</Text>
                   
-                  <View style={styles.gridUserRow}>
-                     <Image source={{ uri: post.user.avatar }} style={styles.gridUserAvatar} />
-                     <View style={{flex: 1}}>
-                       <Text style={styles.gridUserName} numberOfLines={1}>{post.user.name}</Text>
-                       <Text style={styles.gridGroupName} numberOfLines={1}>{post.group.name}</Text>
-                     </View>
+                  <View style={styles.listActions}>
+                    <View style={styles.listStats}>
+                      <Ionicons name="heart-outline" size={20} color="#fff" />
+                      <Text style={styles.statsText}>{post.likes}</Text>
+                      <Ionicons name="chatbubble-outline" size={20} color="#fff" style={{ marginLeft: 12 }} />
+                      <Text style={styles.statsText}>{post.comments}</Text>
+                    </View>
+                    <View style={styles.reactionPills}>
+                       <Text style={styles.reactionText}>🔥 💪</Text>
+                    </View>
                   </View>
                 </View>
-
-                <TouchableOpacity style={styles.reactionContainer}>
-                   <Text style={styles.reactionText}>🔥 💪</Text>
-                </TouchableOpacity>
               </TouchableOpacity>
             ))}
           </View>
@@ -167,194 +169,163 @@ const styles = StyleSheet.create({
   // Header
   header: {
     paddingHorizontal: 16,
-    marginBottom: 24,
-    paddingTop: 8,
+    paddingTop: 12,
+    marginBottom: 8,
   },
   headerTopRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 24,
   },
-  profileSection: {
+  brandContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 6,
+    flex: 1,
   },
-  avatar: {
-    width: 40, 
-    height: 40,
-    borderRadius: 20,
-    marginRight: 12,
-    borderWidth: 1,
-    borderColor: '#333',
+  logo: {
+    width: 24,
+    height: 24,
   },
-  greetingText: {
+  brandName: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 18,
+    fontWeight: '800',
+    letterSpacing: -0.5,
+  },
+  centerProfile: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  largeAvatar: {
+    width: 50, 
+    height: 50,
+    borderRadius: 25,
+    borderWidth: 2,
+    borderColor: '#2563eb',
+    marginBottom: 4,
+  },
+  userLevelCenter: {
+    color: '#a1a1aa',
+    fontSize: 11,
     fontWeight: '600',
   },
-  userLevel: {
-    color: '#a1a1aa',
-    fontSize: 12,
-  },
-  pageTitle: {
-    color: '#fff',
-    fontSize: 28,
-    lineHeight: 34,
-    fontWeight: 'bold',
-  },
-  
-  // Header Icons
   headerIcons: {
     flexDirection: 'row',
+    justifyContent: 'flex-end',
+    flex: 1,
   },
   iconBtn: {
-    marginLeft: 16,
     borderWidth: 1,
-    borderColor: '#333',
+    borderColor: '#1c1c1e',
     borderRadius: 20,
     padding: 8,
+    backgroundColor: '#000',
   },
   badge: {
     position: 'absolute',
-    top: -4,
-    right: -4,
-    backgroundColor: '#2563eb', 
-    width: 16,
-    height: 16,
-    borderRadius: 8,
+    top: -2,
+    right: -2,
+    backgroundColor: '#ef4444', 
+    width: 14,
+    height: 14,
+    borderRadius: 7,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 2,
+    borderWidth: 1.5,
     borderColor: '#000',
   },
   badgeText: {
     color: '#fff',
-    fontSize: 9,
+    fontSize: 8,
     fontWeight: 'bold',
   },
 
-  // Cards
-  cardsRow: {
-    paddingHorizontal: 16,
-    flexDirection: 'column', 
-    gap: 16,
-    marginBottom: 32,
+  // Recent Section (List Format)
+  recentSection: {
+    marginTop: 16,
   },
-  goalCard: {
-    width: '100%',
-    borderRadius: 20,
-    padding: 16,
-    height: 100, 
-    justifyContent: 'space-between',
-    flexDirection: 'column'
+  listContainer: {
+    paddingHorizontal: 0,
   },
-  dailyCard: {
-    backgroundColor: '#1c1c1e',
-    borderWidth: 1,
-    borderColor: '#333',
+  listItem: {
+    backgroundColor: '#000',
+    marginBottom: 24,
+    borderBottomWidth: 1,
+    borderBottomColor: '#1c1c1e',
+    paddingBottom: 16,
   },
-  weeklyCard: {
-    backgroundColor: '#2563eb', // Primary Blue
-  },
-  goalCardHeader: {
+  listHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-  },
-  goalLabel: {
-    color: 'rgba(255,255,255,0.7)',
-    fontSize: 13,
-    fontWeight: '600',
-    textTransform: 'uppercase',
-  },
-  goalValue: {
-    color: '#fff',
-    fontSize: 18, 
-    fontWeight: 'bold',
-    marginTop: 8,
-  },
-
-  // Recent Grid
-  recentSection: {
     paddingHorizontal: 16,
+    marginBottom: 12,
   },
-  recentTitle: {
+  listUserAvatar: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    marginRight: 10,
+  },
+  listUserText: {
+    flex: 1,
+  },
+  listUserName: {
     color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 16,
+    fontSize: 14,
+    fontWeight: '600',
   },
-  gridContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: GAP, 
+  listGroupName: {
+    color: '#a1a1aa',
+    fontSize: 12,
   },
-  gridItem: {
-    width: COLUMN_WIDTH,
-    backgroundColor: '#09090b', // Zinc-950 (More contrast)
-    borderRadius: 16,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#27272a', 
-    marginBottom: GAP,
+  listTime: {
+    color: '#71717a',
+    fontSize: 12,
   },
-  gridImage: {
+  listImage: {
     width: '100%',
     aspectRatio: 1,
-    borderRadius: 12,
-    marginBottom: 10,
-    backgroundColor: '#333',
+    backgroundColor: '#1c1c1e',
   },
-  gridContent: {
-    flex: 1,
+  listFooter: {
+    paddingHorizontal: 16,
+    marginTop: 12,
+  },
+  listPostTitle: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '700',
+    marginBottom: 4,
+  },
+  listDescription: {
+    color: '#d4d4d8',
+    fontSize: 14,
+    lineHeight: 20,
+    marginBottom: 12,
+  },
+  listActions: {
+    flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  gridPostTitle: {
-    color: '#2563eb', 
-    fontWeight: 'bold',
+  listStats: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  statsText: {
+    color: '#a1a1aa',
     fontSize: 13,
-    lineHeight: 18,
-    marginBottom: 8,
+    marginLeft: 4,
+    fontWeight: '500',
   },
-  gridUserRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingRight: 48, // Espaço para o botão de reação
-  },
-  gridUserAvatar: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    marginRight: 8,
-    backgroundColor: '#333',
-  },
-  gridUserName: {
-    color: '#e4e4e7', // Zinc-200
-    fontSize: 11,
-    fontWeight: '600',
-  },
-  gridGroupName: {
-    color: '#a1a1aa', // Zinc-400
-    fontSize: 10,
-  },
-  // Reações (Floating Action no card)
-  reactionContainer: {
-    position: 'absolute',
-    bottom: 10,
-    right: 10,
-    backgroundColor: '#27272a', 
-    borderRadius: 14,
-    paddingHorizontal: 8,
+  reactionPills: {
+    backgroundColor: '#1c1c1e',
+    paddingHorizontal: 10,
     paddingVertical: 4,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    borderRadius: 12,
   },
   reactionText: {
-    fontSize: 10,
-  },
-  statusBadge: {
-    // Deprecated
+    fontSize: 14,
   },
 });
