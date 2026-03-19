@@ -5,6 +5,11 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 
+// Telas de Auth
+import { WelcomeScreen } from '../screens/auth/WelcomeScreen';
+import { LoginScreen } from '../screens/auth/LoginScreen';
+import { RegisterScreen } from '../screens/auth/RegisterScreen';
+
 // Telas principais
 import { HomeScreen } from '../screens/HomeScreen';
 import { CreateGroupScreen } from '../screens/CreateGroupScreen';
@@ -20,7 +25,11 @@ import { CameraScreen } from '../screens/checkin/CameraScreen';
 
 // Tipagem das rotas
 export type RootStackParamList = {
+  Auth: undefined;
   MainTabs: undefined;
+  Welcome: undefined;
+  Login: undefined;
+  Register: undefined;
   Camera: { challengeId: string };
   Direct: undefined;
   GroupDetails: { groupId: string; name: string };
@@ -124,11 +133,18 @@ export function RootNavigator() {
 
   return (
     <NavigationContainer theme={CustomDarkTheme}>
-      <Stack.Navigator screenOptions={{ 
+      <Stack.Navigator 
+        initialRouteName="Welcome"
+        screenOptions={{ 
         headerShown: false,
         contentStyle: { backgroundColor: '#000' }, // Garante fundo preto na transição
         animation: 'fade', // Menos propenso a falhas de background branco
       }}>
+        {/* Telas de Autenticação */}
+        <Stack.Screen name="Welcome" component={WelcomeScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Register" component={RegisterScreen} />
+        
         {/* Abas com a base da UI */}
         <Stack.Screen name="MainTabs" component={TabNavigator} />
         {/* Telas Fullscreen que ficam por cima das abas */}
