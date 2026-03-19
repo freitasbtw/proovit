@@ -73,7 +73,10 @@ export function HomeScreen() {
         <View style={styles.header}>
           <View style={styles.headerTopRow}>
             {/* User Profile */}
-            <View style={styles.profileSection}>
+            <TouchableOpacity 
+              style={styles.profileSection}
+              onPress={() => navigation.navigate('Profile')}
+            >
               <Image 
                 source={{ uri: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150' }} 
                 style={styles.avatar} 
@@ -82,7 +85,7 @@ export function HomeScreen() {
                 <Text style={styles.greetingText}>Olá, Matheus</Text>
                 <Text style={styles.userLevel}>Level 8</Text>
               </View>
-            </View>
+            </TouchableOpacity>
 
             {/* Icons */}
             <View style={styles.headerIcons}>
